@@ -14,8 +14,8 @@ struct ContentView: View {
     @State var winText: String = ""
     @State var playAgainText: String = ""
     
-    @State var Xpoints: Int = 3
-    @State var Opoints: Int = 4
+    @State var Xpoints: Int = 0
+    @State var Opoints: Int = 0
     
     var body: some View {
         ZStack{
@@ -40,7 +40,7 @@ struct ContentView: View {
             Text("\(playAgainText)")
                 .font(.system(size: 20))
                 .foregroundColor(Color.white)
-                .frame(width: 300, height: 770, alignment: .bottom)
+                .frame(width: 300, height: 650, alignment: .bottom)
             Rectangle()
                 .fill(.clear)
                 .frame(width: 260, height: 550)
@@ -86,7 +86,7 @@ struct ContentView: View {
                         .frame(width: 100, height: 100, alignment: .center)
                         .onTapGesture {
                             markTile(tileNumber: 0)
-                            winText = checkWin() ?? ""
+                            checkWin()
                         }
                         .overlay(
                         Text("\(boxes[0])")
@@ -97,7 +97,7 @@ struct ContentView: View {
                         .frame(width: 100, height: 100, alignment: .center)
                         .onTapGesture {
                             markTile(tileNumber: 1)
-                            winText = checkWin() ?? ""
+                            checkWin()
                         }
                         .overlay(
                         Text("\(boxes[1])")
@@ -108,7 +108,7 @@ struct ContentView: View {
                         .frame(width: 100, height: 100, alignment: .center)
                         .onTapGesture {
                             markTile(tileNumber: 2)
-                            winText = checkWin() ?? ""
+                            checkWin()
                         }
                         .overlay(
                         Text("\(boxes[2])")
@@ -121,7 +121,7 @@ struct ContentView: View {
                         .frame(width: 100, height: 100, alignment: .center)
                         .onTapGesture {
                             markTile(tileNumber: 3)
-                            winText = checkWin() ?? ""
+                            checkWin()
                         }
                         .overlay(
                         Text("\(boxes[3])")
@@ -132,7 +132,7 @@ struct ContentView: View {
                         .frame(width: 100, height: 100, alignment: .center)
                         .onTapGesture {
                             markTile(tileNumber: 4)
-                            winText = checkWin() ?? ""
+                            checkWin()
                         }
                         .overlay(
                         Text("\(boxes[4])")
@@ -143,7 +143,7 @@ struct ContentView: View {
                         .frame(width: 100, height: 100, alignment: .center)
                         .onTapGesture {
                             markTile(tileNumber: 5)
-                            winText = checkWin() ?? ""
+                            checkWin()
                         }
                         .overlay(
                         Text("\(boxes[5])")
@@ -156,7 +156,7 @@ struct ContentView: View {
                         .frame(width: 100, height: 100, alignment: .center)
                         .onTapGesture {
                             markTile(tileNumber: 6)
-                            winText = checkWin() ?? ""
+                            checkWin()
                         }
                         .overlay(
                         Text("\(boxes[6])")
@@ -167,7 +167,7 @@ struct ContentView: View {
                         .frame(width: 100, height: 100, alignment: .center)
                         .onTapGesture {
                             markTile(tileNumber: 7)
-                            winText = checkWin() ?? ""
+                            checkWin()
                         }
                         .overlay(
                         Text("\(boxes[7])")
@@ -178,7 +178,7 @@ struct ContentView: View {
                         .frame(width: 100, height: 100, alignment: .center)
                         .onTapGesture {
                             markTile(tileNumber: 8)
-                            winText = checkWin() ?? ""
+                            checkWin()
                         }
                         .overlay(
                         Text("\(boxes[8])")
@@ -208,7 +208,7 @@ struct ContentView: View {
         }
     }
     
-    func checkWin() -> String? {
+    func checkWin(){
         // Define all possible winning combinations
         let winCombinations = [
             [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
@@ -225,15 +225,13 @@ struct ContentView: View {
             if a == "X" && b == "X" && c == "X" {
                 gameOn = false
                 playAgainText = "Tap to play again!"
-                return "X WIN"
+                Xpoints += 1
             } else if a == "O" && b == "O" && c == "O" {
                 gameOn = false
                 playAgainText = "Tap to play again!"
-                return "O WINS"
+                Opoints += 1
             }
         }
-
-        return nil // No winner yet
     }
     
     func playAgain(){
