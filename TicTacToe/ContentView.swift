@@ -15,6 +15,11 @@ struct ContentView: View {
     var body: some View {
         ZStack{
             Rectangle()
+                .onTapGesture {
+                    if(gameOn == false){
+                        playAgain()
+                    }
+                }
             Rectangle()
                 .fill(Color.white)
                 .frame(width: 316, height: 316, alignment: .center)
@@ -133,11 +138,19 @@ struct ContentView: View {
                     )
                 }
             }
+            Rectangle()
+                .opacity(0)
+                .onTapGesture {
+                    if(gameOn == false){
+                        playAgain()
+                    }
+                }
 
         }
         .ignoresSafeArea()
-        
+        .preferredColorScheme(.light)
     }
+    
     
     func markTile(tileNumber: Int){
         if(boxes[tileNumber] == "" && gameOn == true){
@@ -175,6 +188,15 @@ struct ContentView: View {
         }
 
         return nil // No winner yet
+    }
+    
+    func playAgain(){
+        for i in 0..<9 {
+            boxes[i] = ""
+        }
+        Xturn = true
+        gameOn = true
+        winText = ""
     }
 
         
