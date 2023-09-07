@@ -13,6 +13,10 @@ struct ContentView: View {
     @State var gameOn: Bool = true
     @State var winText: String = ""
     @State var playAgainText: String = ""
+    
+    @State var Xpoints: Int = 3
+    @State var Opoints: Int = 4
+    
     var body: some View {
         ZStack{
             Rectangle()
@@ -28,7 +32,7 @@ struct ContentView: View {
             Text("TicTacToe")
                 .font(.system(size: 50))
                 .foregroundColor(Color.white)
-                .frame(width: 300, height: 700, alignment: .top)
+                .frame(width: 300, height: 750, alignment: .top)
             Text("\(winText)")
                 .font(.system(size: 60))
                 .foregroundColor(Color.white)
@@ -37,6 +41,45 @@ struct ContentView: View {
                 .font(.system(size: 20))
                 .foregroundColor(Color.white)
                 .frame(width: 300, height: 770, alignment: .bottom)
+            Rectangle()
+                .fill(.clear)
+                .frame(width: 260, height: 550)
+                .overlay(
+                    Text("O")
+                        .foregroundColor(Color.white)
+                        .font(.system(size:60))
+                    , alignment: .topTrailing
+                    )
+                .overlay(
+                    Text("X")
+                        .foregroundColor(Color.white)
+                        .font(.system(size:60))
+                    , alignment: .topLeading
+                    )
+            Rectangle()
+                .fill(.clear)
+                .frame(width: 130, height: 510)
+                .overlay(
+                    HStack{
+                        Spacer()
+                        Text("\(Xpoints)")
+                            .foregroundColor(Color.white)
+                            .font(.system(size:40))
+                            .frame(width: 50)
+                        Text(":")
+                            .foregroundColor(Color.white)
+                            .font(.system(size:40))
+                            .frame(width: 7)
+                        Text("\(Opoints)")
+                            .foregroundColor(Color.white)
+                            .font(.system(size:40))
+                            .frame(width: 50)
+                        Spacer()
+                    }
+                    , alignment: .top
+                    )
+   
+                
             HStack{
                 VStack{
                     Rectangle()
