@@ -12,9 +12,19 @@ struct ContentView: View {
     @State var Xturn: Bool = true
     @State var gameOn: Bool = true
     @State var winText: String = ""
+    @State var playAgainText: String = ""
     var body: some View {
         ZStack{
             Rectangle()
+                .fill(Color.clear)
+                .onTapGesture {
+                    if(gameOn == false){
+                        playAgain()
+                    }
+                }
+            
+            Rectangle()
+                .frame(width: 400, height: 1000)
                 .onTapGesture {
                     if(gameOn == false){
                         playAgain()
@@ -22,15 +32,19 @@ struct ContentView: View {
                 }
             Rectangle()
                 .fill(Color.white)
-                .frame(width: 316, height: 316, alignment: .center)
+                .frame(width: 315, height: 315, alignment: .center)
             Text("TicTacToe")
                 .font(.system(size: 50))
                 .foregroundColor(Color.white)
                 .frame(width: 300, height: 700, alignment: .top)
             Text("\(winText)")
-                .font(.system(size: 50))
+                .font(.system(size: 60))
                 .foregroundColor(Color.white)
                 .frame(width: 300, height: 700, alignment: .bottom)
+            Text("\(playAgainText)")
+                .font(.system(size: 20))
+                .foregroundColor(Color.white)
+                .frame(width: 300, height: 770, alignment: .bottom)
             HStack{
                 VStack{
                     Rectangle()
@@ -138,13 +152,6 @@ struct ContentView: View {
                     )
                 }
             }
-            Rectangle()
-                .opacity(0)
-                .onTapGesture {
-                    if(gameOn == false){
-                        playAgain()
-                    }
-                }
 
         }
         .ignoresSafeArea()
@@ -152,15 +159,10 @@ struct ContentView: View {
     }
     
     
-    func markTile(tileNumber: Int){
-        if(boxes[tileNumber] == "" && gameOn == true){
-            if (Xturn == true) {
-                boxes[tileNumber] = "X"
-                Xturn = false
-            }else{
-                boxes[tileNumber] = "O"
-                Xturn = true
-            }
+    func markTile(tileNumber: Int) {
+        if boxes[tileNumber].isEmpty && gameOn{
+            boxes[tileNumber] = Xturn ? "X" : "O"
+            Xturn.toggle()
         }
     }
     
@@ -180,9 +182,11 @@ struct ContentView: View {
             // Check if the combination has all "X" or all "O"
             if a == "X" && b == "X" && c == "X" {
                 gameOn = false
-                return "X WINS"
+                playAgainText = "Tap to play again!"
+                return "X WIN"
             } else if a == "O" && b == "O" && c == "O" {
                 gameOn = false
+                playAgainText = "Tap to play again!"
                 return "O WINS"
             }
         }
@@ -197,8 +201,8 @@ struct ContentView: View {
         Xturn = true
         gameOn = true
         winText = ""
+        playAgainText = ""
     }
-
         
 }
 
