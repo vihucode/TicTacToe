@@ -16,15 +16,7 @@ struct ContentView: View {
     var body: some View {
         ZStack{
             Rectangle()
-                .fill(Color.clear)
-                .onTapGesture {
-                    if(gameOn == false){
-                        playAgain()
-                    }
-                }
-            
-            Rectangle()
-                .frame(width: 400, height: 1000)
+                .frame(width: 500, height: 1000)
                 .onTapGesture {
                     if(gameOn == false){
                         playAgain()
@@ -151,6 +143,13 @@ struct ContentView: View {
                             .font(.system(size: 80))
                     )
                 }
+            }
+            if !gameOn {
+                Color.clear
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        playAgain()
+                    }
             }
 
         }
