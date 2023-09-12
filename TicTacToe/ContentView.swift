@@ -10,6 +10,7 @@ import SwiftUI
 struct ContentView: View {
     @State var boxes: [String] = ["","","","","","","","",""]
     @State var Xturn: Bool = true
+    @State var Oturn: Bool = false
     @State var gameOn: Bool = true
     @State var winText: String = ""
     @State var playAgainText: String = ""
@@ -28,7 +29,8 @@ struct ContentView: View {
                 }
             Rectangle()
                 .fill(Color.white)
-                .frame(width: 315, height: 315, alignment: .center)
+                .frame(width: 315, height: 315)
+                .padding(.top, 100.0)
             Text("TicTacToe")
                 .font(.system(size: 50))
                 .foregroundColor(Color.white)
@@ -48,12 +50,14 @@ struct ContentView: View {
                     Text("O")
                         .foregroundColor(Color.white)
                         .font(.system(size:60))
+                        .opacity(Oturn ? 1.0 : 0.5)
                     , alignment: .topTrailing
                     )
                 .overlay(
                     Text("X")
                         .foregroundColor(Color.white)
                         .font(.system(size:60))
+                        .opacity(Xturn ? 1.0 : 0.5)
                     , alignment: .topLeading
                     )
             Rectangle()
@@ -79,14 +83,12 @@ struct ContentView: View {
                     , alignment: .top
                     )
    
-                
             HStack{
                 VStack{
                     Rectangle()
                         .frame(width: 100, height: 100, alignment: .center)
                         .onTapGesture {
                             markTile(tileNumber: 0)
-                            checkWin()
                         }
                         .overlay(
                         Text("\(boxes[0])")
@@ -97,7 +99,6 @@ struct ContentView: View {
                         .frame(width: 100, height: 100, alignment: .center)
                         .onTapGesture {
                             markTile(tileNumber: 1)
-                            checkWin()
                         }
                         .overlay(
                         Text("\(boxes[1])")
@@ -108,7 +109,6 @@ struct ContentView: View {
                         .frame(width: 100, height: 100, alignment: .center)
                         .onTapGesture {
                             markTile(tileNumber: 2)
-                            checkWin()
                         }
                         .overlay(
                         Text("\(boxes[2])")
@@ -116,12 +116,12 @@ struct ContentView: View {
                             .font(.system(size: 80))
                     )
                 }
+                .padding(0.0)
                 VStack{
                     Rectangle()
                         .frame(width: 100, height: 100, alignment: .center)
                         .onTapGesture {
                             markTile(tileNumber: 3)
-                            checkWin()
                         }
                         .overlay(
                         Text("\(boxes[3])")
@@ -132,7 +132,6 @@ struct ContentView: View {
                         .frame(width: 100, height: 100, alignment: .center)
                         .onTapGesture {
                             markTile(tileNumber: 4)
-                            checkWin()
                         }
                         .overlay(
                         Text("\(boxes[4])")
@@ -143,7 +142,6 @@ struct ContentView: View {
                         .frame(width: 100, height: 100, alignment: .center)
                         .onTapGesture {
                             markTile(tileNumber: 5)
-                            checkWin()
                         }
                         .overlay(
                         Text("\(boxes[5])")
@@ -156,7 +154,6 @@ struct ContentView: View {
                         .frame(width: 100, height: 100, alignment: .center)
                         .onTapGesture {
                             markTile(tileNumber: 6)
-                            checkWin()
                         }
                         .overlay(
                         Text("\(boxes[6])")
@@ -167,7 +164,6 @@ struct ContentView: View {
                         .frame(width: 100, height: 100, alignment: .center)
                         .onTapGesture {
                             markTile(tileNumber: 7)
-                            checkWin()
                         }
                         .overlay(
                         Text("\(boxes[7])")
@@ -178,7 +174,6 @@ struct ContentView: View {
                         .frame(width: 100, height: 100, alignment: .center)
                         .onTapGesture {
                             markTile(tileNumber: 8)
-                            checkWin()
                         }
                         .overlay(
                         Text("\(boxes[8])")
@@ -187,6 +182,7 @@ struct ContentView: View {
                     )
                 }
             }
+            .padding(.top, 100.0)
             if !gameOn {
                 Color.clear
                     .contentShape(Rectangle())
@@ -204,7 +200,19 @@ struct ContentView: View {
     func markTile(tileNumber: Int) {
         if boxes[tileNumber].isEmpty && gameOn{
             boxes[tileNumber] = Xturn ? "X" : "O"
-            Xturn.toggle()
+            checkWin()
+            if gameOn{
+                withAnimation(
+                    Animation
+                        .default
+                ) {
+                    
+                    Xturn.toggle()
+                    Oturn.toggle()
+                }
+            }
+
+            
         }
     }
     
@@ -216,6 +224,8 @@ struct ContentView: View {
             [0, 4, 8], [2, 4, 6]             // Diagonals
         ]
 
+        var isFull = true // Flag to check if all tiles are filled
+
         for combination in winCombinations {
             let a = boxes[combination[0]]
             let b = boxes[combination[1]]
@@ -226,19 +236,42 @@ struct ContentView: View {
                 gameOn = false
                 playAgainText = "Tap to play again!"
                 Xpoints += 1
+                return // Exit early if a win is found
             } else if a == "O" && b == "O" && c == "O" {
                 gameOn = false
                 playAgainText = "Tap to play again!"
                 Opoints += 1
+                return // Exit early if a win is found
+            }
+
+            // Check if any tile is empty
+            if a.isEmpty || b.isEmpty || c.isEmpty {
+                isFull = false
             }
         }
+
+        // If all tiles are filled and no winner, it's a draw
+        if isFull {
+            gameOn = false
+            Xturn = false
+            Oturn = false
+            playAgainText = "Tap to play again!"
+        }
     }
+
     
     func playAgain(){
         for i in 0..<9 {
             boxes[i] = ""
         }
-        Xturn = true
+        if (Xpoints + Opoints) % 2 == 0{
+            Xturn = true
+            Oturn = false
+        }else{
+            Xturn = false
+            Oturn = true
+        }
+        
         gameOn = true
         winText = ""
         playAgainText = ""
